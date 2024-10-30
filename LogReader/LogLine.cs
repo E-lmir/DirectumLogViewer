@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace LogReader
 {
@@ -17,7 +17,5 @@ namespace LogReader
     public string Version { get; set; }
     public string Pid { get; set; }
     public string Trace { get; set; }
-    public long NumLine { get; set; }
-
   }
 }

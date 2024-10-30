@@ -39,11 +39,6 @@ namespace LogReader
       fileLength = 0;
     }
 
-    public string GetLogFilePath()
-    {
-      return filePath;
-    }
-
     /// <summary>
     /// При возможном сбое повторного просмотра файла - вылетает ошибка.
     /// </summary>

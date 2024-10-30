@@ -48,14 +48,14 @@ namespace LogViewer
     public static bool IsFirstRun()
     {
       using RegistryKey key = Registry.CurrentUser.CreateSubKey(RegKey);
-      var isEmpty = key.GetValue(LogsPathKey, null) == null;
+      var isEmpty = (string)key.GetValue(LogsPathKey, null) == null;
       key.Close();
       return isEmpty;
     }
 
     public static bool? ShowSettingsDialog()
     {
-      LoadSettings();
+      Load();
 
       var dialog = new SettingsWindow();
       var result = dialog.ShowDialog();
@@ -73,15 +73,18 @@ namespace LogViewer
       return result;
     }
 
-    public static void LoadSettings()
+    public static void Load()
     {
       using RegistryKey key = Registry.CurrentUser.CreateSubKey(RegKey);
 
       LogsPath = (string)key.GetValue(LogsPathKey, GetDefaultLogPath());
+
       WhitelistLogs = (string)key.GetValue(WhitelistKey, string.Join("\n", DefaultListLogs));
+
       AssociateLogFile = Convert.ToBoolean(key.GetValue(AssociateLogFileKey, false));
       associateLogFileOldValue = AssociateLogFile;
-      UseBackgroundNotification = Convert.ToBoolean(key.GetValue(UseBackgroundNotificationKey, true));
+
+      UseBackgroundNotification = Convert.ToBoolean(key.GetValue(UseBackgroundNotificationKey, false));
 
       key.Close();
     }
@@ -90,11 +93,10 @@ namespace LogViewer
     {
       if (Directory.Exists(DefaultLogPath))
         return DefaultLogPath;
-
-      if (Directory.Exists(IISDefaultLogPath))
+      else if (Directory.Exists(IISDefaultLogPath))
         return IISDefaultLogPath;
-
-      return string.Empty;
+      else
+        return string.Empty;
     }
 
     private void Accept_Click(object sender, RoutedEventArgs e)
@@ -121,7 +123,7 @@ namespace LogViewer
         IsFolderPicker = true
       };
 
-      if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
+      if (CommonFileDialogResult.Ok == dialog.ShowDialog())
         LogsPathTextBox.Text = dialog.FileName;
 
       this.Focus();
