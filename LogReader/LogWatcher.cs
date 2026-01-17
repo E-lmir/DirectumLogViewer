@@ -1,4 +1,5 @@
-﻿using System;
+using Renci.SshNet;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Timers;
@@ -24,19 +25,30 @@ namespace LogReader
     private readonly string filePath;
     private Timer timer;
 
+    private SftpClient _client;
+
     /// <summary>
     /// Кол-во max строк для блока записи.
     /// </summary>
     private const int LineBlockSize = 500;
 
     /// <summary>
-    /// ctor с созданием наблюдателем за файлом по указанному пути. Тригер на изменение файла.
+    /// ctor с созданием наблюдателя за файлом по указанному пути. Триггер на изменение файла.
     /// </summary>
     /// <param name="filePath">Путь до файла.</param>
     public LogWatcher(string filePath)
     {
       this.filePath = filePath;
       fileLength = 0;
+    }
+
+    /// <summary>
+    /// ctor с созданием с созданием Sftp клиента для доступа к файлам по ssh.
+    /// </summary>
+    /// <param name="filePath">Путь до файла.</param>
+    public LogWatcher(string filePath, SftpClient client) : this(filePath)
+    {
+      _client = client;
     }
 
     public string GetLogFilePath()
@@ -107,9 +119,58 @@ namespace LogReader
       }
     }
 
+    /// <summary>
+    /// Чтение файла на удаленной машине. При повторном срабатывании читает файл с прошлого места окончания чтения.
+    /// </summary>
+    public void ReadToEndLineRemote()
+    {
+      if (_client == null)
+        return;
+
+      _client.Connect();
+      using var fileStream = _client.OpenRead(filePath);
+      using var streamReader = new StreamReader(fileStream);
+      var current_length = streamReader.BaseStream.Length;
+      if (current_length < fileLength)
+      {
+        streamReader.DiscardBufferedData();
+        streamReader.BaseStream.Seek(0, SeekOrigin.Begin);
+        position = 0;
+        FileReCreated?.Invoke();
+      }
+
+      string line;
+      var lines = new List<string>();
+      streamReader.BaseStream.Position = position;
+      fileLength = current_length;
+      while (streamReader != null && (line = streamReader.ReadLine()) != null)
+      {
+        if (!string.IsNullOrEmpty(line))
+        {
+          lines.Add(line);
+
+          if (lines.Count >= LineBlockSize)
+          {
+            InvokeBlockNewLinesEvent(lines, streamReader);
+            lines.Clear();
+          }
+        }
+      }
+
+      if (lines.Count > 0)
+        InvokeBlockNewLinesEvent(lines, streamReader);
+
+      position = streamReader.BaseStream.Position;
+      _client.Disconnect();
+    }
+
     private void OnTimedEvent(Object source, ElapsedEventArgs e)
     {
-      ReadToEndLine();
+      if (_client == null)
+        ReadToEndLine();
+      else
+        ReadToEndLineRemote();
+
       timer.Start();
     }
 
@@ -135,7 +196,11 @@ namespace LogReader
         timer.Dispose();
         timer = null;
       }
+      if (_client != null)
+      {
+        _client.Dispose();
+        _client = null;
+      }
     }
-
   }
 }

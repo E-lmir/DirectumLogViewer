@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows10.0.17763.0</TargetFramework>
+    <TargetFramework>net8.0-windows10.0.17763.0</TargetFramework>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>Resources\horse_icon.ico</ApplicationIcon>
     <Version>1.0.7</Version>
@@ -17,6 +17,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\delete.png" />
     <None Remove="Resources\find.png" />
     <None Remove="Resources\horse.png" />
     <None Remove="Resources\horse_icon.ico" />
@@ -35,10 +36,15 @@
 
   <ItemGroup>
     <ProjectReference Include="..\LogReader\LogReader.csproj" />
+    <ProjectReference Include="..\SshConfigParser\SshConfigParser.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Resources\find.png" />
+    <Resource Include="Resources\delete.png" />
+    <Resource Include="Resources\find.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <Generator> </Generator>
+    </Resource>
     <Resource Include="Resources\horse.png" />
     <Resource Include="Resources\horse_icon.ico" />
     <Resource Include="Resources\RegEx16.png" />
