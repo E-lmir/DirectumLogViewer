@@ -24,9 +24,9 @@
         <RowDefinition Height="25" />
         <RowDefinition Height="35" />
     </Grid.RowDefinitions>
-    <Label Grid.Row="0" Content="Host" FontStyle="Normal" FontSize="14" VerticalAlignment="Top" Width="350" Margin="0,0,0,0"/>
+    <Label Grid.Row="0" Content="Connection name" FontStyle="Normal" FontSize="14" VerticalAlignment="Top" Width="350" Margin="0,0,0,0"/>
     <TextBox Grid.Row="1" Name="Host" HorizontalAlignment="Stretch" Margin="0,0,0,0" Width ="350"  FontSize="14" FontStyle="Normal"/>
-    <Label Grid.Row="2" Content="Host name" FontStyle="Normal" FontSize="14" VerticalAlignment="Top" Width="350" Margin="0,0,0,0"/>
+    <Label Grid.Row="2" Content="Host" FontStyle="Normal" FontSize="14" VerticalAlignment="Top" Width="350" Margin="0,0,0,0"/>
     <TextBox Grid.Row="3" Name="HostName" HorizontalAlignment="Stretch" Margin="0,0,0,0" Width ="350"  FontSize="14" FontStyle="Normal"/>
     <Label Grid.Row="4" Content="User name" FontStyle="Normal" FontSize="14" VerticalAlignment="Top" Width="350" Margin="0,0,0,0"/>
     <TextBox Grid.Row="5" Name="Username" HorizontalAlignment="Stretch" Margin="0,0,0,0" Width ="350"  FontSize="14" FontStyle="Normal"/>

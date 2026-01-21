@@ -171,7 +171,7 @@ namespace LogReader
       else
         ReadToEndLineRemote();
 
-      timer.Start();
+      timer?.Start();
     }
 
     /// <summary>

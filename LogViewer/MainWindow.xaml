@@ -103,7 +103,6 @@
                 <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="auto" />
-                <ColumnDefinition Width="auto" />
             </Grid.ColumnDefinitions>
             <Label Grid.Column="0" Content="Host" FontStyle="Normal" FontSize="14" VerticalAlignment="Top" Margin="5,0,0,0"/>
             <ComboBox Grid.Column="1" x:Name="HostFilter" HorizontalAlignment="Left"  VerticalAlignment="Center" FontStyle="Normal" Width="150" Height="24" FontSize="14" SelectionChanged="Host_SelectionChanged">
@@ -125,11 +124,9 @@
                 </DataTemplate>
               </ComboBox.ItemTemplate>
             </ComboBox>
-            <ComboBox x:Name="LogsFileNames" Grid.Column="2" ItemsSource="{Binding}" HorizontalAlignment="Left"  VerticalAlignment="Center" Width="305" Height="25" Margin="5,0,0,0" FontSize="14" DisplayMemberPath="Name" SelectionChanged="Files_SelectionChanged" />
+      <ComboBox x:Name="LogsFileNames" Grid.Column="2" ItemsSource="{Binding}" HorizontalAlignment="Left"  VerticalAlignment="Center" Width="305" Height="25" Margin="5,0,0,0" FontSize="14" DisplayMemberPath="Name" IsEditable="true" IsTextSearchEnabled="False" StaysOpenOnEdit="True" TextBoxBase.TextChanged="FileFilter_TextChanged" SelectionChanged="Files_SelectionChanged" />
 
-            <TextBox Tag="File filter" Grid.Column="3" Width="200" TextChanged="FileFilter_TextChanged"  Margin="5,0,0,0" Height="25"/>
-          
-            <Label Grid.Column="4" Content="Tenant" FontStyle="Normal" FontSize="14" VerticalAlignment="Top" Margin="5,0,0,0"/>
+      <Label Grid.Column="4" Content="Tenant" FontStyle="Normal" FontSize="14" VerticalAlignment="Top" Margin="5,0,0,0"/>
             <ComboBox Grid.Column="5" x:Name="TenantFilter" HorizontalAlignment="Left"  VerticalAlignment="Center" FontStyle="Normal" Width="150" Height="24" FontSize="14" SelectionChanged="FilterTenant_SelectionChanged"/>
 
             <Label  Grid.Column="6" Content="Level" FontStyle="Normal" FontSize="14" VerticalAlignment="Center" Margin="5,0,0,0"/>

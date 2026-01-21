@@ -543,13 +543,12 @@ namespace LogViewer
       var filterValue = Filter.Text;
       var levelValue = LevelFilter.SelectedValue;
 
-      CloseLogFile();
-
       var comboBox = sender as ComboBox;
-
       var selectedItem = comboBox.SelectedItem as LogFileOpener;
       if (selectedItem == null)
         return;
+
+      CloseLogFile();
 
       if (selectedItem.Type == LogFileOpenerType.FromFileDirect)
       {
@@ -1236,7 +1235,12 @@ namespace LogViewer
 
     private void FileFilter_TextChanged(object sender, TextChangedEventArgs e)
     {
-      var filter = sender as TextBox;
+  //    if (e.Changes.First().AddedLength > 1)
+ //       return;
+      var filter = sender as ComboBox;
+      if (filter is null)
+        return;
+
       if (string.IsNullOrEmpty(filter.Text))
       {
         InitLogFiles(remoteFiles);
@@ -1244,9 +1248,16 @@ namespace LogViewer
         return;
       }
 
-      var regExp = new Regex(filter.Text);
-      var matches = remoteFiles.Where(x => regExp.IsMatch(x)).ToList();
-      InitLogFiles(matches);
+      try
+      {
+        var regExp = new Regex(filter.Text);
+        var matches = remoteFiles.Where(x => regExp.IsMatch(x)).ToList();
+        InitLogFiles(matches);
+      }
+      catch
+      {
+        filter.Text = filter.Text.Substring(0, filter.Text.Length - 1);
+      }
     }
   }
 }
